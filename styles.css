@@ -1,8 +1,17 @@
-/* General Layout */
 body {
     margin: 0;
     scrollbar-width: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+#sidebar,
+#main-content,
+#chat-container,
+.message,
+#prompt {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 
 #toast-container {
     position: fixed;
@@ -34,9 +43,18 @@ body {
 }
 
 @keyframes disappear {
-    0% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-20px); }
+    0% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
 }
 
 
@@ -55,7 +73,7 @@ body {
 .loading .dot {
     width: 6px;
     height: 6px;
-    background-color: #ccc;
+    background-color: #aaa;
     border-radius: 50%;
     animation: blink 1.4s infinite both;
 }
@@ -83,7 +101,8 @@ body {
 
 /* Sidebar */
 #sidebar {
-    background: #181818;
+    /* background: #181818; */
+    background-color: #fff;
     color: #eee;
     width: 260px;
     display: flex;
@@ -91,7 +110,7 @@ body {
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
-    border-right: 1px solid rgba(225, 228, 232, 0.128);
+    border-right: 1px solid rgba(225, 228, 232, 0.8);
 }
 
 #sidebar h1 {
@@ -102,12 +121,12 @@ body {
     font-weight: 500;
     letter-spacing: -0.03em;
     line-height: 64px;
-    color: white;
+    color: black;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 
     -webkit-text-stroke-width: 0.2px;
-    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-color: black;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -121,9 +140,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #2c2c2c;
+    background: #fff;
     padding: 10px;
     border-radius: 8px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #e1e4e8cc;
     margin-bottom: 10px;
     cursor: pointer;
 
@@ -139,11 +161,11 @@ body {
 }
 
 .chat-entry:hover {
-    background: #3c3c3c;
+    /* background: #aaa; */
     box-shadow:
         0px 0.60219px 2.04744px -0.5px rgba(28, 29, 33, 0.067),
         0px 2.28853px 7.78101px -1px rgba(28, 29, 33, 0.08),
-        0px 10px 34px -1.5px rgba(28, 29, 33, 0.14),
+        /* 0px 10px 34px -1.5px rgba(28, 29, 33, 0.14), */
         0px 0px 0px 0px rgba(223, 224, 225, 0.3);
 }
 
@@ -155,14 +177,14 @@ body {
 
     font-family: system-ui, sans-serif;
     font-size: 16px;
-    color: white;
+    color: black;
     max-width: 75%;
     word-wrap: break-word;
     opacity: 0;
     animation: fadeIn 0.5s forwards;
 
     -webkit-text-stroke-width: 0.4px;
-    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-color: black;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -185,11 +207,11 @@ body {
 .delete-btn:hover {
     color: rgba(255, 0, 0, 0.766);
     transform: translateY(-1px);
-    box-shadow:
+    /* box-shadow:
         0px 0.60219px 2.04744px -0.5px rgba(28, 29, 33, 0.067),
         0px 2.28853px 7.78101px -1px rgba(28, 29, 33, 0.08),
         0px 10px 34px -1.5px rgba(28, 29, 33, 0.14),
-        0px 0px 0px 0px rgba(223, 224, 225, 0.3);
+        0px 0px 0px 0px rgba(223, 224, 225, 0.3); */
 }
 
 .delete-btn i {
@@ -240,7 +262,8 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: #181818;
+    /* background: #181818; */
+    background: #fff;
     padding: 20px;
     box-sizing: border-box;
     overflow: hidden;
@@ -283,47 +306,52 @@ body {
 
 .user {
     align-self: flex-end;
-    background-color: #007bff;
+    background-color: #024FE0;
 }
 
 .bot {
     align-self: flex-start;
-    background-color: #373737;
+    /* background-color: #373737; */
+    background-color: #E5E4E9;
+    color: black;
+    -webkit-text-stroke-color: black;
 }
 
 #input-container {
     display: flex;
     margin-top: 15px;
-    height: 50px;
+    /* height: 50px; */
+    height: 46px;
     gap: 16px;
 }
 
-.prompt-wrapper {
-    flex: 1;
-    position: relative;
-    background: linear-gradient(45deg, #19BBEE, #1E9EE8, #A63FE9, #C64ADD, #D1529A, #C7213D, #E2592A, #E57522, #EF8C34);
-    background-size: 400% 400%;
-    padding: 2px; /* thickness of the border */
-    border-radius: 12px;
-    animation: glowBorder 8s ease infinite;
-}
-
 @keyframes glowBorder {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 #prompt {
     scrollbar-width: none;
     width: 100%;
     height: 100%;
-    background: #2c2c2c;
-    border: none;
+    /* background: #2c2c2c; */
+    background: #fff;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #e1e4e8cc;
     outline: none;
     padding: 10px;
     border-radius: 10px;
-    color: white;
+    color: black;
     font-family: SF Pro Text, Myriad Set Pro, SF Pro Icons, Apple Legacy Chevron, Helvetica Neue, Helvetica, Arial, sans-serif;
     letter-spacing: -.03em;
     font-weight: 400;
@@ -378,4 +406,51 @@ body {
     transform: translateY(-2px);
 }
 
+/* Light mode (default) */
+body {
+    background: #fff;
+    color: black;
+}
 
+/* DARK MODE STYLES */
+body.dark {
+    background: #181818;
+    color: #eee;
+}
+
+body.dark #sidebar {
+    background: #181818;
+    color: #eee;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark #sidebar h1 {
+    color: white;
+    -webkit-text-stroke-color: white;
+}
+
+body.dark .chat-entry {
+    background: #2c2c2c;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark .chat-name {
+    color: white;
+    -webkit-text-stroke-color: white;
+}
+
+body.dark #main-content {
+    background: #181818;
+}
+
+body.dark .bot {
+    background-color: #373737;
+    color: white;
+    -webkit-text-stroke-color: white;
+}
+
+body.dark #prompt {
+    background: #2c2c2c;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+}

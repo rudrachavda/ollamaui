@@ -1,7 +1,5 @@
 let chats = {};
 let currentChatId = null;
-let recognition;
-let isListening = false;
 
 window.onload = function () {
     const saved = localStorage.getItem('ollama_chats');
@@ -27,36 +25,6 @@ window.onload = function () {
             sendPrompt();
         }
     });
-
-    // Setup voice recognition
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
-        recognition.continuous = true; // <<< 🔥 KEEPS LISTENING
-        recognition.interimResults = true; // <<< 🔥 Show live text
-        recognition.lang = 'en-US';
-    
-        recognition.onresult = (event) => {
-            let finalTranscript = '';
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                const transcript = event.results[i][0].transcript;
-                if (event.results[i].isFinal) {
-                    finalTranscript += transcript;
-                }
-            }
-            document.getElementById('prompt').value = finalTranscript;
-        };
-    
-        recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
-            stopListening();
-        };
-    
-        recognition.onend = () => {
-            isListening = false;
-            updateMicButton();
-        };
-    }
-    
 };
 
 async function sendPrompt() {
@@ -86,12 +54,15 @@ async function sendPrompt() {
             body: JSON.stringify({ prompt })
         });
 
+        if (!res.ok) {
+            throw new Error(`Server error: ${res.status}`);
+        }
+
         const data = await res.json();
-        const botReply = data.response;
+        const botReply = data.response || "🤔 (No reply from server)";
 
         removeLoadingMessage(loadingId);
         addMessage(botReply, 'bot');
-        speak(botReply);
 
         chats[currentChatId].messages.push({ text: botReply, sender: 'bot' });
         chats[currentChatId].updated = new Date().toISOString();
@@ -103,7 +74,7 @@ async function sendPrompt() {
     } catch (error) {
         console.error('Error fetching bot reply:', error);
         removeLoadingMessage(loadingId);
-        addMessage("❌ Error connecting to server.", 'bot');
+        addMessage("❌ Server error. Try again.", 'bot');
     }
 }
 
@@ -118,8 +89,10 @@ async function generateChatTitle(chatId) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ conversation })
         });
-        const data = await res.json();
 
+        if (!res.ok) return;
+
+        const data = await res.json();
         const title = data.response.trim().replace(/^"|"$/g, '');
 
         if (title) {
@@ -176,7 +149,7 @@ function loadChat() {
     if (!currentChatId || !chats[currentChatId] || chats[currentChatId].messages.length === 0) {
         const greeting = document.createElement('div');
         greeting.classList.add('message', 'bot');
-        greeting.innerHTML = "👋 Hello, I am Zeus.";
+        greeting.innerHTML = "Hello, I am Zeus.";
         chatContainer.appendChild(greeting);
         return;
     }
@@ -302,55 +275,7 @@ function showToast(message) {
     }, 3000);
 }
 
-// 🎙️ MIC functions
-function startListening() {
-    if (!recognition) return;
-    if (isListening) {
-        recognition.stop();
-        isListening = false;
-    } else {
-        recognition.start();
-        isListening = true;
-    }
-    updateMicButton();
+function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('dark_mode', document.body.classList.contains('dark'));
 }
-
-function updateMicButton() {
-    const micBtn = document.getElementById('mic-btn');
-    micBtn.innerText = isListening ? "🛑" : "🎙️";
-}
-
-// 🔈 Text to Speech
-// function speak(text) {
-//     const utterance = new SpeechSynthesisUtterance(text);
-//     utterance.lang = 'en-US';
-//     utterance.rate = 1.0;
-//     speechSynthesis.speak(utterance);
-// }
-// if ('webkitSpeechRecognition' in window) {
-//     recognition = new webkitSpeechRecognition();
-//     recognition.continuous = true; // <<< 🔥 KEEPS LISTENING
-//     recognition.interimResults = true; // <<< 🔥 Show live text
-//     recognition.lang = 'en-US';
-
-//     recognition.onresult = (event) => {
-//         let finalTranscript = '';
-//         for (let i = event.resultIndex; i < event.results.length; ++i) {
-//             const transcript = event.results[i][0].transcript;
-//             if (event.results[i].isFinal) {
-//                 finalTranscript += transcript;
-//             }
-//         }
-//         document.getElementById('prompt').value = finalTranscript;
-//     };
-
-//     recognition.onerror = (event) => {
-//         console.error('Speech recognition error:', event.error);
-//         stopListening();
-//     };
-
-//     recognition.onend = () => {
-//         isListening = false;
-//         updateMicButton();
-//     };
-// }

@@ -18,15 +18,14 @@
             <h1>Zeus</h1>
             <button id="new-chat-btn" onclick="newChat()">New Chat</button>
             <div id="chat-list"></div>
+            <button id="toggle-dark-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
         </aside>
 
         <main id="main-content">
             <div id="chat-container"></div>
 
             <div id="input-container">
-                <div class="prompt-wrapper">
-                    <textarea id="prompt" placeholder="Type your message..."></textarea>
-                </div>
+                <textarea id="prompt" placeholder="Type your message..."></textarea>
                 <!-- <button id="mic-btn" onclick="startListening()">🎙️</button> -->
                 <button id="send-btn" onclick="sendPrompt()">Send</button>
             </div>
